@@ -1,7 +1,15 @@
+import { useContext, useEffect } from "react";
+import { SurveyContext } from "../util/SurveyContext";
 import { useNavigate } from "react-router-dom";
 
 const StartPage = () => {
   const navigate = useNavigate();
+  const { name, setName, setPoints } = useContext(SurveyContext);
+
+  useEffect(() => {
+    setName("");
+    setPoints(Array(19).fill(0));
+  }, [])
 
   const handleClick = () => {
     navigate("/questionpage");
@@ -26,7 +34,12 @@ const StartPage = () => {
         </p>
         <p>당신의 평상시 모습을 반영하고 있는대로 답하십시오.</p>
       </div>
-      <button className="btn" onClick={handleClick}>
+      <input
+        type="text"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
+      <button className="btn" onClick={handleClick} disabled={!name}>
         시작하기
       </button>
     </>

@@ -1,9 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { SurveyContext } from "../util/SurveyContext";
 import questionsData from "../data/questionsData";
 
 const Questionnaire = () => {
   const navigate = useNavigate();
+
+  const { points, setPoints } = useContext(SurveyContext);
 
   const handleHomePage = () => {
     navigate("/");
@@ -13,9 +17,6 @@ const Questionnaire = () => {
 
   // State to manage the current page
   const [currentPage, setCurrentPage] = useState(1);
-
-  // State to manage the points for each type
-  const [points, setPoints] = useState(Array(19).fill(0));
 
   // State to track which answers have been selected
   const [selectedAnswers, setSelectedAnswers] = useState({});
@@ -110,7 +111,7 @@ const Questionnaire = () => {
                           : "",
                     }}
                   >
-                    {point} Points
+                    {point}
                   </button>
                 ))}
               </div>
@@ -131,26 +132,13 @@ const Questionnaire = () => {
             Next
           </button>
         </div>
-        {/* <div>
-          <h2>Total Points by Type</h2>
-          <ul>
-            {points.map((point, index) => (
-              <li key={index}>
-                Type {index + 1}: {point} Points
-              </li>
-            ))}
-          </ul>
-        </div> */}
       </div>
 
-      {/* <button className="btn" onClick={handleResultPage} disabled={!allQuestionsAnswered}>
-        결과보기
-      </button> */}
-      <button className="btn" onClick={handleResultPage}>
+      <button className="btn" onClick={handleResultPage} disabled={!allQuestionsAnswered}>
         결과보기
       </button>
-      <button onClick={() => console.log(points)}>
-        test
+      <button className="btn" onClick={handleResultPage}>
+        Test
       </button>
     </>
   );

@@ -1,9 +1,11 @@
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { SurveyContext } from "../util/SurveyContext";
 
 const ResultPage = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const { points } = location.state || { points: Array(19).fill(0) };
+
+  const { name, points } = useContext(SurveyContext);
 
   // Names corresponding to each point index
   const spiritualGiftNames = [
@@ -29,23 +31,32 @@ const ResultPage = () => {
   ];
 
   // Combine points with their names and sort by points in descending order
-  const sortingPoints = points.map((point, index) => ({ name: spiritualGiftNames[index], point }));
+  const sortingPoints = points.map((point, index) => ({
+    name: spiritualGiftNames[index],
+    point,
+  }));
   sortingPoints.sort((a, b) => b.point - a.point);
+
+  // Get top 3 points with names
+  const top3PointsWithNames = sortingPoints.slice(0, 3);
 
   const handleHomePage = () => {
     navigate("/");
   };
   return (
     <>
-      <div>Result</div>
+      <h1>은사진단 결과</h1>
       <button onClick={handleHomePage}>처음으로</button>
       <div>
+        <h2>{name}님의 성령의 은사진단 결과</h2>
         {/* point board */}
         <ol>
-                {sortingPoints.map(({ name, point }) => (
-                    <li key={name}>{name}: {point} Points</li>
-                ))}
-            </ol>
+          {top3PointsWithNames.map(({ name, point }) => (
+            <li key={name}>
+              {name}: {point}
+            </li>
+          ))}
+        </ol>
       </div>
       <div>공유하기</div>
     </>
