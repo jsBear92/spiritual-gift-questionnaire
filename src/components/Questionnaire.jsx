@@ -3,11 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { SurveyContext } from "../util/SurveyContext";
 import questionsData from "../data/questionsData";
+import Signature from "./Signature";
 
 const Questionnaire = () => {
   const navigate = useNavigate();
 
-  const { points, setPoints } = useContext(SurveyContext);
+  const { setPoints } = useContext(SurveyContext);
 
   const handleHomePage = () => {
     navigate("/");
@@ -31,6 +32,8 @@ const Questionnaire = () => {
     indexOfFirstQuestion,
     indexOfLastQuestion
   );
+
+  const [unansweredQuestions, setUnansweredQuestions] = useState("");
 
   // Handle answer selection
   const handleAnswer = (questionId, type, point) => {
@@ -69,9 +72,11 @@ const Questionnaire = () => {
     }
   };
 
-  // Navigate to the result page
-  const handleResultPage = () => {
-    navigate("/resultpage", { state: { points } });
+  // Handle previous page
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
   };
 
   // Check if all questions are answered
@@ -79,11 +84,28 @@ const Questionnaire = () => {
     selectedAnswers.hasOwnProperty(question.id)
   );
 
-  // Handle previous page
-  const handlePreviousPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
+  // Find unanswered questions
+  const findUnansweredQuestions = () => {
+    return questionsData
+        .filter(question => !selectedAnswers.hasOwnProperty(question.id))
+        .map(question => question.id);
+};
+
+
+  // Navigate to the results page
+  const handleShowResults = () => {
+    if (allQuestionsAnswered) {
+      navigate("/resultpage");
+    } else {
+      const findQuestions = findUnansweredQuestions();
+      const stringQuestions = findQuestions.join(', ')
+      console.log(stringQuestions)
+      setUnansweredQuestions(stringQuestions);
     }
+  };
+
+  const handleResultPage = () => {
+    navigate("/resultpage");
   };
 
   return (
@@ -92,7 +114,6 @@ const Questionnaire = () => {
       <button onClick={handleHomePage}>처음으로</button>
 
       <div>
-        <h1>Question List</h1>
         <ul>
           {currentQuestions.map((question) => (
             <li key={question.id}>
@@ -134,12 +155,19 @@ const Questionnaire = () => {
         </div>
       </div>
 
-      <button className="btn" onClick={handleResultPage} disabled={!allQuestionsAnswered}>
+      <button
+        className="btn"
+        onClick={handleShowResults}
+      >
         결과보기
       </button>
       <button className="btn" onClick={handleResultPage}>
         Test
       </button>
+        {unansweredQuestions.length > 0 && (<div>
+            Please answer the following questions: {unansweredQuestions}
+        </div>)}
+      <Signature />
     </>
   );
 };

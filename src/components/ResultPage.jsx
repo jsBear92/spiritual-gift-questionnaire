@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { SurveyContext } from "../util/SurveyContext";
+import Signature from "./Signature";
 
 const ResultPage = () => {
   const navigate = useNavigate();
@@ -43,6 +44,30 @@ const ResultPage = () => {
   const handleHomePage = () => {
     navigate("/");
   };
+
+  // Kakao Share init
+  useEffect(() => {
+    if (!window.Kakao.isInitialized()) {
+      window.Kakao.init(import.meta.env.VITE_KAKAO_JAVASCRIPT_KEY);
+    }
+  }, []);
+
+  const handleShareKakaoClick = () => {
+    if (window.Kakao) {
+      const kakao = window.Kakao;
+
+      kakao.Share.sendDefault({
+        objectType: "text",
+        text: `${name}님의 성령의 은사진단 결과: ${top3PointsWithNames
+          .map(({ name, point }) => `${name}: ${point}`)}`,
+        link: {
+          mobileWebUrl: "https://spiritual-gift-questionnaire.vercel.app",
+          webUrl: "https://spiritual-gift-questionnaire.vercel.app",
+        },
+      });
+    }
+  };
+
   return (
     <>
       <h1>은사진단 결과</h1>
@@ -58,7 +83,9 @@ const ResultPage = () => {
           ))}
         </ol>
       </div>
-      <div>공유하기</div>
+      <h2>공유하기</h2>
+      <button onClick={handleShareKakaoClick}>카카오톡 공유하기</button>
+      <Signature />
     </>
   );
 };

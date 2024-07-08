@@ -1,6 +1,7 @@
 import { useContext, useEffect } from "react";
 import { SurveyContext } from "../util/SurveyContext";
 import { useNavigate } from "react-router-dom";
+import Signature from "./Signature";
 
 const StartPage = () => {
   const navigate = useNavigate();
@@ -42,6 +43,7 @@ const StartPage = () => {
       <button className="btn" onClick={handleClick} disabled={!name}>
         시작하기
       </button>
+      <Signature />
     </>
   );
 };
