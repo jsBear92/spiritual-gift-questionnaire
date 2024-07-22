@@ -2,7 +2,6 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { useState } from "react";
 import { SurveyContext } from "./util/SurveyContext";
 import { Analytics } from "@vercel/analytics/react";
-import "./App.css";
 import StartPage from "./components/StartPage";
 import Questionnaire from "./components/Questionnaire";
 import ResultPage from "./components/ResultPage";

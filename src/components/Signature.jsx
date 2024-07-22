@@ -1,6 +1,6 @@
 const Signature = () => {
   return (
-    <div>Made by Jaeseong Jeong</div>
+    <div className="relative mt-4 text-gray-300">Made by Jaeseong Jeong</div>
   )
 }
 

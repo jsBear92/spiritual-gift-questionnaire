@@ -4,6 +4,7 @@ import { useContext } from "react";
 import { SurveyContext } from "../util/SurveyContext";
 import questionsData from "../data/questionsData";
 import Signature from "./Signature";
+import { Button, Divider, Pagination } from "@nextui-org/react";
 
 const Questionnaire = () => {
   const navigate = useNavigate();
@@ -14,7 +15,7 @@ const Questionnaire = () => {
     navigate("/");
   };
 
-  const questionsPerPage = 10;
+  const questionsPerPage = 14;
 
   // State to manage the current page
   const [currentPage, setCurrentPage] = useState(1);
@@ -65,20 +66,6 @@ const Questionnaire = () => {
     });
   };
 
-  // Handle next page
-  const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
-
-  // Handle previous page
-  const handlePreviousPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-
   // Check if all questions are answered
   const allQuestionsAnswered = questionsData.every((question) =>
     selectedAnswers.hasOwnProperty(question.id)
@@ -87,10 +74,9 @@ const Questionnaire = () => {
   // Find unanswered questions
   const findUnansweredQuestions = () => {
     return questionsData
-        .filter(question => !selectedAnswers.hasOwnProperty(question.id))
-        .map(question => question.id);
-};
-
+      .filter((question) => !selectedAnswers.hasOwnProperty(question.id))
+      .map((question) => question.id);
+  };
 
   // Navigate to the results page
   const handleShowResults = () => {
@@ -98,8 +84,8 @@ const Questionnaire = () => {
       navigate("/resultpage");
     } else {
       const findQuestions = findUnansweredQuestions();
-      const stringQuestions = findQuestions.join(', ')
-      console.log(stringQuestions)
+      const stringQuestions = findQuestions.join(", ");
+      console.log(stringQuestions);
       setUnansweredQuestions(stringQuestions);
     }
   };
@@ -109,66 +95,53 @@ const Questionnaire = () => {
   };
 
   return (
-    <>
-      <h1>설문지</h1>
-      <button onClick={handleHomePage}>처음으로</button>
-
+    <div className="container mx-auto flex flex-col justify-center p-12">
+      <h1 className="text-2xl">설문지</h1>
+      <Divider className="my-4" />
       <div>
         <ul>
           {currentQuestions.map((question) => (
             <li key={question.id}>
-              <div>{question.question}</div>
-              <div>
+              <div className="mb-2">{question.question}</div>
+              <div className="mb-4">
                 {[3, 2, 1, 0].map((point) => (
-                  <button
+                  <Button
                     key={point}
                     onClick={() =>
                       handleAnswer(question.id, question.type, point)
                     }
+                    size="sm"
+                    radius="md"
+                    className="bg-blue-500 text-white"
                     style={{
                       backgroundColor:
                         selectedAnswers[question.id] === point
-                          ? "lightblue"
+                          ? "green"
                           : "",
                     }}
                   >
                     {point}
-                  </button>
+                  </Button>
                 ))}
               </div>
             </li>
           ))}
         </ul>
-        <div>
-          <button onClick={handlePreviousPage} disabled={currentPage === 1}>
-            Previous
-          </button>
-          <span>
-            Page {currentPage} of {totalPages}
-          </span>
-          <button
-            onClick={handleNextPage}
-            disabled={currentPage === totalPages}
-          >
-            Next
-          </button>
-        </div>
+        <Pagination isCompact showControls total={totalPages} initialPage={1} page={currentPage} onChange={setCurrentPage} />
       </div>
-
-      <button
-        className="btn"
-        onClick={handleShowResults}
-      >
+      <div className="flex flex-wrap">
+      <Button color="success" onClick={handleShowResults} className="flex-auto text-white">
         결과보기
-      </button>
-      <button className="btn" onClick={handleResultPage}>
+      </Button>
+      <Button onClick={handleHomePage} className="flex-auto">처음으로</Button>
+      </div>
+      {unansweredQuestions.length > 0 && (
+        <div>Please answer the following questions: {unansweredQuestions}</div>
+      )}
+      {/* <Button color="danger" onClick={handleResultPage}>
         Test
-      </button>
-        {unansweredQuestions.length > 0 && (<div>
-            Please answer the following questions: {unansweredQuestions}
-        </div>)}
-      <Signature />
-    </>
+      </Button> */}
+    </div>
   );
 };
 

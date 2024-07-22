@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useContext, useEffect } from "react";
 import { SurveyContext } from "../util/SurveyContext";
 import Signature from "./Signature";
+import { Button, Divider } from "@nextui-org/react";
 
 const ResultPage = () => {
   const navigate = useNavigate();
@@ -39,7 +40,15 @@ const ResultPage = () => {
   sortingPoints.sort((a, b) => b.point - a.point);
 
   // Get top 3 points with names
-  const top3PointsWithNames = sortingPoints.slice(0, 3);
+  const top3Points = [...new Set(sortingPoints.map((p) => p.point))].slice(
+    0,
+    3
+  );
+
+  // Select the top points with name considering the ties
+  const top3PointsWithNames = sortingPoints.filter((p) =>
+    top3Points.includes(p.point)
+  );
 
   const handleHomePage = () => {
     navigate("/");
@@ -58,8 +67,9 @@ const ResultPage = () => {
 
       kakao.Share.sendDefault({
         objectType: "text",
-        text: `${name}님의 성령의 은사진단 결과: ${top3PointsWithNames
-          .map(({ name, point }) => `${name}: ${point}`)}`,
+        text: `${name}님의 성령의 은사진단 결과: \n${top3PointsWithNames.map(
+          ({ name, point }) => `${name}: ${point}`
+        ).join("\n")}`,
         link: {
           mobileWebUrl: "https://spiritual-gift-questionnaire.vercel.app",
           webUrl: "https://spiritual-gift-questionnaire.vercel.app",
@@ -69,24 +79,30 @@ const ResultPage = () => {
   };
 
   return (
-    <>
-      <h1>은사진단 결과</h1>
-      <button onClick={handleHomePage}>처음으로</button>
+    <div className="container mx-auto flex flex-col justify-center p-12">
+      <h1 className="text-2xl">{name}님의 은사진단 결과</h1>
+      <Divider className="my-4" />
+
       <div>
-        <h2>{name}님의 성령의 은사진단 결과</h2>
         {/* point board */}
         <ol>
           {top3PointsWithNames.map(({ name, point }) => (
-            <li key={name}>
+            <li className="mb-2" key={name}>
               {name}: {point}
             </li>
           ))}
         </ol>
       </div>
-      <h2>공유하기</h2>
-      <button onClick={handleShareKakaoClick}>카카오톡 공유하기</button>
+      <Divider className="my-4" />
+      <Button
+        onClick={handleShareKakaoClick}
+        className="bg-yellow-400 text-white mb-2"
+      >
+        카카오톡 공유하기
+      </Button>
+      <Button onClick={handleHomePage}>처음으로</Button>
       <Signature />
-    </>
+    </div>
   );
 };
 
