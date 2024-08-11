@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { SurveyContext } from "../util/SurveyContext";
 import questionsData from "../data/questionsData";
-import Signature from "./Signature";
 import { Button, Divider, Pagination } from "@nextui-org/react";
 
 const Questionnaire = () => {

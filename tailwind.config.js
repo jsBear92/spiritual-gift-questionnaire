@@ -10,6 +10,9 @@ export default {
   ],
   theme: {
     extend: {},
+    container: {
+      center: true,
+    },
   },
   darkMode: "class",
   plugins: [

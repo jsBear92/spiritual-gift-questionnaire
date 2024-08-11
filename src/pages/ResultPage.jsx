@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useContext, useEffect } from "react";
 import { SurveyContext } from "../util/SurveyContext";
-import Signature from "./Signature";
+import Signature from "../components/Signature";
 import { Button, Divider } from "@nextui-org/react";
 
 const ResultPage = () => {
