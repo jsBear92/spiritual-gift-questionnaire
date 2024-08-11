@@ -94,7 +94,7 @@ const Questionnaire = () => {
   };
 
   return (
-    <div className="container mx-auto flex flex-col justify-center p-12">
+    <div className="container mx-auto flex flex-col justify-center">
       <h1 className="text-2xl">설문지</h1>
       <Divider className="my-4" />
       <div>
@@ -104,14 +104,14 @@ const Questionnaire = () => {
               <div className="mb-2">{question.question}</div>
               <div className="mb-4">
                 {[3, 2, 1, 0].map((point) => (
-                  <Button
+                  <button
                     key={point}
                     onClick={() =>
                       handleAnswer(question.id, question.type, point)
                     }
+                    className="bg-blue-500 text-white w-14 h-8 rounded-lg mr-2"
                     size="sm"
                     radius="md"
-                    className="bg-blue-500 text-white"
                     style={{
                       backgroundColor:
                         selectedAnswers[question.id] === point
@@ -120,13 +120,13 @@ const Questionnaire = () => {
                     }}
                   >
                     {point}
-                  </Button>
+                  </button>
                 ))}
               </div>
             </li>
           ))}
         </ul>
-        <Pagination isCompact showControls total={totalPages} initialPage={1} page={currentPage} onChange={setCurrentPage} />
+        <Pagination isCompact showControls total={totalPages} initialPage={1} page={currentPage} onChange={setCurrentPage} size="sm" />
       </div>
       <div className="flex flex-wrap">
       <Button color="success" onClick={handleShowResults} className="flex-auto text-white">
@@ -135,7 +135,7 @@ const Questionnaire = () => {
       <Button onClick={handleHomePage} className="flex-auto">처음으로</Button>
       </div>
       {unansweredQuestions.length > 0 && (
-        <div>Please answer the following questions: {unansweredQuestions}</div>
+        <div>미답변: {unansweredQuestions}</div>
       )}
       {/* <Button color="danger" onClick={handleResultPage}>
         Test
